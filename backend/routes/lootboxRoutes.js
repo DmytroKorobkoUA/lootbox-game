@@ -3,8 +3,9 @@ const router = express.Router();
 const Lootbox = require('../models/lootbox');
 const Player = require('../models/player');
 const Reward = require('../models/reward');
+const authenticateJWT = require('../middleware/authenticateJWT');
 
-router.post('/create', async (req, res) => {
+router.post('/create', authenticateJWT, async (req, res) => {
     const { name, rewardIds, rarity } = req.body;
 
     if (!name || !Array.isArray(rewardIds) || !['common', 'rare', 'epic'].includes(rarity)) {
@@ -26,7 +27,7 @@ router.post('/create', async (req, res) => {
     }
 });
 
-router.get('/', async (req, res) => {
+router.get('/', authenticateJWT, async (req, res) => {
     try {
         const lootboxes = await Lootbox.find();
         res.status(200).json(lootboxes);
@@ -36,7 +37,7 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', authenticateJWT, async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -51,7 +52,7 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-router.put('/update/:id', async (req, res) => {
+router.put('/update/:id', authenticateJWT, async (req, res) => {
     const { id } = req.params;
     const { name, rewardIds, rarity } = req.body;
 
@@ -78,7 +79,7 @@ router.put('/update/:id', async (req, res) => {
     }
 });
 
-router.delete('/delete/:id', async (req, res) => {
+router.delete('/delete/:id', authenticateJWT, async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -93,7 +94,7 @@ router.delete('/delete/:id', async (req, res) => {
     }
 });
 
-router.post('/open/:id', async (req, res) => {
+router.post('/open/:id', authenticateJWT, async (req, res) => {
     const { id } = req.params;
     const { username } = req.body;
 

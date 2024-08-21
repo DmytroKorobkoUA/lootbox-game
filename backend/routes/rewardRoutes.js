@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const Reward = require('../models/reward');
+const authenticateJWT = require("../middleware/authenticateJWT");
 
-router.post('/create', async (req, res) => {
+router.post('/create', authenticateJWT, async (req, res) => {
     const { name, probability } = req.body;
 
     if (!name || probability === undefined) {
@@ -19,7 +20,7 @@ router.post('/create', async (req, res) => {
     }
 });
 
-router.get('/', async (req, res) => {
+router.get('/', authenticateJWT, async (req, res) => {
     try {
         const rewards = await Reward.find();
         res.status(200).json(rewards);
@@ -29,7 +30,7 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', authenticateJWT, async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -44,7 +45,7 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-router.put('/update/:id', async (req, res) => {
+router.put('/update/:id', authenticateJWT, async (req, res) => {
     const { id } = req.params;
     const { name, probability } = req.body;
 
@@ -62,7 +63,7 @@ router.put('/update/:id', async (req, res) => {
     }
 });
 
-router.delete('/delete/:id', async (req, res) => {
+router.delete('/delete/:id', authenticateJWT, async (req, res) => {
     const { id } = req.params;
 
     try {
