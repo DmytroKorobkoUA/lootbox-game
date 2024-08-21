@@ -128,3 +128,12 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# IDE files
+.idea/
+
+# .env backend/frontend files
+.backend/.env.development
+.backend/.env.production
+.frontend/.env.development
+.frontend/.env.production
