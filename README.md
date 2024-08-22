@@ -1,4 +1,4 @@
-# Multiplayer Loot box Game
+# Multiplayer Loot Box Game
 
 A real-time multiplayer game where players compete to open loot boxes and collect rewards.
 
