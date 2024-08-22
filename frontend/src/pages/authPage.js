@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import '../styles/authPage.css';
 import { registerPlayer, loginPlayer } from '../services/api';
 
 const AuthPage = ({ setPlayer }) => {

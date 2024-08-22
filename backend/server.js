@@ -47,7 +47,7 @@ app.use('/api/lootboxes', lootboxRoutes);
 app.use('/api/rewards', rewardRoutes);
 
 io.on('connection', (socket) => {
-    console.log('a user connected', socket.id);
+    console.log('user connected', socket.id);
 
     socket.on('disconnect', () => {
         console.log('user disconnected', socket.id);
@@ -59,19 +59,24 @@ io.on('connection', (socket) => {
             const lootbox = await Lootbox.findById(lootboxId);
 
             if (!lootbox || lootbox.isOpened) {
-                return socket.emit('error', { message: 'Lootbox is already opened or does not exist' });
+                return socket.emit('error', { message: 'Loot box is already opened or does not exist' });
             }
 
             lootbox.isOpened = true;
             lootbox.openedBy = username;
             await lootbox.save();
 
-            io.emit('lootboxOpened', lootbox);
+            io.emit('lootboxOpened', {
+                lootboxId: lootbox._id,
+                reward: lootbox.rewards[0].name,
+                imagePath: lootbox.rewards[0].imagePath
+            });
         } catch (error) {
             console.error('Error opening lootbox:', error);
-            socket.emit('error', { message: 'An error occurred while opening the lootbox' });
+            socket.emit('error', { message: 'An error occurred while opening the loot box' });
         }
     });
+
 });
 
 server.listen(PORT, () => {

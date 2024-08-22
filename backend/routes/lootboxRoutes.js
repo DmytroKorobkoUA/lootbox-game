@@ -6,30 +6,62 @@ const Reward = require('../models/reward');
 const authenticateJWT = require('../middleware/authenticateJWT');
 
 router.post('/create', authenticateJWT, async (req, res) => {
-    const { name, rewardIds, rarity } = req.body;
-
-    if (!name || !Array.isArray(rewardIds) || !['common', 'rare', 'epic'].includes(rarity)) {
-        return res.status(400).json({ error: 'Name, rewardIds, and valid rarity are required' });
-    }
-
     try {
-        const rewards = await Reward.find({ '_id': { $in: rewardIds } });
-        if (rewards.length !== rewardIds.length) {
-            return res.status(400).json({ error: 'One or more rewards do not exist' });
-        }
+        const rewards = await Reward.find();
+        const lootboxes = [];
+        const numLegendary = 1;
+        const numEpic = 3;
+        const numRare = 6;
+        const numCommon = 25 - numLegendary - numEpic - numRare;
 
-        const newLootbox = new Lootbox({ name, rewards: rewardIds, rarity });
-        await newLootbox.save();
-        res.status(201).json(newLootbox);
+        const rewardSets = {
+            legendary: rewards.filter(r => r.rarity === 'legendary'),
+            epic: rewards.filter(r => r.rarity === 'epic'),
+            rare: rewards.filter(r => r.rarity === 'rare'),
+            common: rewards.filter(r => r.rarity === 'common'),
+        };
+
+        const createLootbox = async (rarity, num) => {
+            for (let i = 0; i < num; i++) {
+                const rewardOptions = rewardSets[rarity];
+                if (rewardOptions.length === 0) {
+                    console.warn(`No rewards found for rarity ${rarity}`);
+                    continue;
+                }
+
+                // Create a lootbox with a single reward
+                const reward = rewardOptions[Math.floor(Math.random() * rewardOptions.length)];
+                const newLootbox = new Lootbox({
+                    rewards: [reward._id], // Only one reward per lootbox
+                    rarity
+                });
+                await newLootbox.save();
+                lootboxes.push(newLootbox);
+            }
+        };
+
+        await createLootbox('legendary', numLegendary);
+        await createLootbox('epic', numEpic);
+        await createLootbox('rare', numRare);
+        await createLootbox('common', numCommon);
+
+        res.status(201).json(lootboxes.map(box => ({
+            id: box._id,
+            rarity: box.rarity,
+            isOpened: box.isOpened,
+            rewards: box.rewards
+        })));
     } catch (error) {
-        console.error('Error creating loot box:', error);
+        console.error('Error creating loot boxes:', error);
         res.status(500).json({ error: 'Server error' });
     }
 });
 
 router.get('/', authenticateJWT, async (req, res) => {
     try {
-        const lootboxes = await Lootbox.find();
+        const lootboxes = await Lootbox.find()
+            .sort({ createdAt: -1 })
+            .limit(25);
         res.status(200).json(lootboxes);
     } catch (error) {
         console.error('Error fetching loot boxes:', error);
@@ -54,7 +86,7 @@ router.get('/:id', authenticateJWT, async (req, res) => {
 
 router.put('/update/:id', authenticateJWT, async (req, res) => {
     const { id } = req.params;
-    const { name, rewardIds, rarity } = req.body;
+    const { rewardIds, rarity } = req.body;
 
     try {
         const rewards = await Reward.find({ '_id': { $in: rewardIds } });
@@ -64,7 +96,7 @@ router.put('/update/:id', authenticateJWT, async (req, res) => {
 
         const updatedLootbox = await Lootbox.findByIdAndUpdate(
             id,
-            { name, rewards: rewardIds, rarity },
+            { rewards: rewardIds, rarity },
             { new: true, runValidators: true }
         ).populate('rewards');
 
@@ -115,7 +147,7 @@ router.post('/open/:id', authenticateJWT, async (req, res) => {
         for (const item of lootbox.rewards) {
             cumulativeProbability += item.probability;
             if (rand < cumulativeProbability) {
-                reward = item.name;
+                reward = item;
                 break;
             }
         }
@@ -126,11 +158,11 @@ router.post('/open/:id', authenticateJWT, async (req, res) => {
 
         const player = await Player.findOne({ username });
         if (player) {
-            player.rewards.push(reward);
+            player.rewards.push(reward.name);
             await player.save();
         }
 
-        res.status(200).json({ reward });
+        res.status(200).json({ reward: reward.name, imagePath: reward.imagePath });
     } catch (error) {
         console.error('Error opening loot box:', error);
         res.status(500).json({ error: 'Server error' });
