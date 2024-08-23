@@ -128,7 +128,6 @@ exports.openLootbox = async (req, res) => {
     const { username } = req.body;
 
     try {
-        // Популяция lootbox с данными о наградах
         const lootbox = await Lootbox.findById(id).populate('rewards');
         if (!lootbox) {
             return res.status(404).json({ error: 'Loot box not found' });
@@ -142,7 +141,6 @@ exports.openLootbox = async (req, res) => {
         const rand = Math.random();
         let cumulativeProbability = 0;
 
-        // Здесь нет необходимости в приведение типов. Просто обходим массив объектов
         lootbox.rewards.forEach(item => {
             cumulativeProbability += item.probability;
             if (rand < cumulativeProbability) {
