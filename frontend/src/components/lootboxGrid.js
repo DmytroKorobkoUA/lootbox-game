@@ -1,34 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/lootboxGrid.css';
-import { createLootboxes, getLootboxes } from '../services/api';
+import { getLootboxes } from '../services/api';
 
 const LootboxGrid = ({ socket, username }) => {
     const [lootboxes, setLootboxes] = useState([]);
 
     useEffect(() => {
-        createLootboxes().then(() => {
-            getLootboxes().then(response => {
+        getLootboxes()
+            .then(response => {
                 setLootboxes(response.data);
-            }).catch(error => {
+            })
+            .catch(error => {
                 console.error("Error fetching lootboxes:", error);
             });
-        }).catch(error => {
-            console.error("Error creating lootboxes:", error);
-        });
     }, []);
 
     const handleLootboxClick = (id) => {
         const lootbox = lootboxes.find(box => box.id === id);
 
         if (lootbox.isOpened) return;
-        socket.emit('openLootbox', { username, lootboxId: id });
+        if (socket) {
+            socket.emit('openLootbox', { username, lootboxId: id });
+        }
     };
 
     useEffect(() => {
         socket.on('lootboxOpened', ({ lootboxId, reward, imagePath }) => {
-            setLootboxes(prevLootboxes => prevLootboxes.map(box =>
-                box.id === lootboxId ? { ...box, isOpened: true, reward, imagePath } : box
-            ));
+            setLootboxes(prevLootboxes =>
+                prevLootboxes.map(box =>
+                    box.id === lootboxId ? { ...box, isOpened: true, reward, imagePath } : box
+                )
+            );
         });
 
         return () => {

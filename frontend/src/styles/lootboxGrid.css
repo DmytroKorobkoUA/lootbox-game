@@ -16,15 +16,39 @@
     background-color: #f9f9f9;
     cursor: pointer;
     position: relative;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.lootbox:hover {
+    border-color: #999;
+}
+
+.lootbox.opened {
+    border-color: #4caf50;
+    background-color: #e8f5e9;
 }
 
 .lootbox img {
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
+    transition: opacity 0.3s ease;
 }
 
-.lootbox.opened span {
+.lootbox.opened img {
+    opacity: 1;
+}
+
+.lootbox img {
+    opacity: 0.5;
+}
+
+.lootbox.opened img {
+    opacity: 1;
+}
+
+.lootbox span {
     position: absolute;
     bottom: 5px;
     left: 5px;
@@ -34,4 +58,9 @@
     background-color: rgba(255, 255, 255, 0.8);
     padding: 2px;
     border-radius: 3px;
+    transition: opacity 0.3s ease;
+}
+
+.lootbox.opened span {
+    opacity: 1;
 }
