@@ -7,9 +7,6 @@ function App() {
     const [player, setPlayer] = useState(null);
     const [socket, setSocket] = useState(null);
     const [gameStarted, setGameStarted] = useState(false);
-    console.log('REACT_APP_PORT:', process.env.REACT_APP_PORT);
-    console.log('REACT_APP_API_BASE_URL:', process.env.REACT_APP_API_BASE_URL);
-    console.log('REACT_APP_BACKEND_SERVER_BASE_URL:', process.env.REACT_APP_BACKEND_SERVER_BASE_URL);
 
     useEffect(() => {
         const storedPlayer = JSON.parse(localStorage.getItem('player'));
