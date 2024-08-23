@@ -16,7 +16,7 @@ const LootboxGrid = ({ socket, username }) => {
     }, []);
 
     const handleLootboxClick = (id) => {
-        const lootbox = lootboxes.find(box => box.id === id);
+        const lootbox = lootboxes.find(box => box._id === id);
 
         if (lootbox.isOpened) return;
         if (socket) {
@@ -28,7 +28,7 @@ const LootboxGrid = ({ socket, username }) => {
         socket.on('lootboxOpened', ({ lootboxId, reward, imagePath }) => {
             setLootboxes(prevLootboxes =>
                 prevLootboxes.map(box =>
-                    box.id === lootboxId ? { ...box, isOpened: true, reward, imagePath } : box
+                    box._id === lootboxId ? { ...box, isOpened: true, reward, imagePath } : box
                 )
             );
         });
@@ -42,9 +42,9 @@ const LootboxGrid = ({ socket, username }) => {
         <div className="lootbox-grid">
             {lootboxes.map((lootbox) => (
                 <div
-                    key={lootbox.id}
+                    key={lootbox._id}
                     className={`lootbox ${lootbox.isOpened ? 'opened' : ''}`}
-                    onClick={() => handleLootboxClick(lootbox.id)}
+                    onClick={() => handleLootboxClick(lootbox._id)}
                 >
                     {lootbox.isOpened ? (
                         <>

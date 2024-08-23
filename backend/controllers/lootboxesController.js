@@ -47,7 +47,9 @@ exports.createLootboxes = async (req, res) => {
                 const reward = rewardOptions[Math.floor(Math.random() * rewardOptions.length)];
                 const newLootbox = new Lootbox({
                     rewards: [reward._id],
-                    rarity
+                    rarity,
+                    reward: reward.name,
+                    imagePath: reward.imagePath
                 });
                 await newLootbox.save();
                 lootboxes.push(newLootbox);
@@ -154,6 +156,7 @@ exports.openLootbox = async (req, res) => {
 
         lootbox.isOpened = true;
         lootbox.openedBy = username;
+
         await lootbox.save();
 
         const player = await Player.findOne({ username });
