@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const playerRoutes = require('./routes/playerRoutes');
 const lootboxRoutes = require('./routes/lootboxRoutes');
 const rewardRoutes = require('./routes/rewardRoutes');
-const lootboxesController = require('./controllers/lootboxesController');
 const Lootbox = require('./models/lootbox');
 const cors = require('cors');
 const { Server } = require('socket.io');
@@ -58,13 +57,7 @@ io.on('connection', (socket) => {
 
     socket.on('startGame', async () => {
         gameStarted = true;
-        try {
-            await lootboxesController.createLootboxes();
-            io.emit('gameStarted');
-        } catch (error) {
-            console.error('Error creating loot boxes:', error);
-            socket.emit('error', { message: 'Failed to start game' });
-        }
+        io.emit('gameStarted');
     });
 
     socket.on('endGame', async () => {
