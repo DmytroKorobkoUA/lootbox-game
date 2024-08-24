@@ -1,0 +1,20 @@
+/* Leader Board Styles */
+.leaderboard {
+    margin-top: 20px;
+}
+
+.leaderboard table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.leaderboard th, .leaderboard td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+.leaderboard th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}

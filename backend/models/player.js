@@ -2,10 +2,14 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
 const playerSchema = new mongoose.Schema({
-    username: { type: String, unique: true, required: true },
+    username: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    rewards: { type: [String], default: [] },
-    isOnline: { type: Boolean, default: true }
+    rewards: [{ type: String }],
+    isOnline: { type: Boolean, default: false },
+    openedCommonBoxes: { type: Number, default: 0 },
+    openedRareBoxes: { type: Number, default: 0 },
+    openedEpicBoxes: { type: Number, default: 0 },
+    openedLegendaryBoxes: { type: Number, default: 0 }
 });
 
 playerSchema.pre('save', async function (next) {

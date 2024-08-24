@@ -51,23 +51,41 @@ let gameStarted = false;
 io.on('connection', (socket) => {
     console.log('user connected', socket.id);
 
-    socket.on('disconnect', () => {
+    socket.on('disconnect', async () => {
         console.log('user disconnected', socket.id);
+
+        const connectedSockets = await io.fetchSockets();
+
+        if (connectedSockets.length === 0) {
+            gameStarted = false;
+            await Lootbox.deleteMany({});
+
+            io.emit('gameEnded');
+        }
     });
 
     socket.on('startGame', async () => {
+        const connectedSockets = await io.fetchSockets();
+
+        if (connectedSockets.length < 2) {
+            return socket.emit('error', { message: 'Not enough players to start the game' });
+        }
+
         gameStarted = true;
+
         io.emit('gameStarted');
     });
 
     socket.on('endGame', async () => {
         gameStarted = false;
         await Lootbox.deleteMany({});
+
         io.emit('gameEnded');
     });
 
     socket.on('openLootbox', async (data) => {
         const { username, lootboxId } = data;
+
         if (!gameStarted) {
             return socket.emit('error', { message: 'Game has not started' });
         }

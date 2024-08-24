@@ -5,6 +5,7 @@ const Reward = require('../models/reward');
 exports.getAllLootboxes = async (req, res) => {
     try {
         const lootboxes = await Lootbox.find();
+        lootboxes.sort(() => Math.random() - 0.5);
         res.json(lootboxes);
     } catch (err) {
         res.status(500).json({ message: err.message });
@@ -60,6 +61,8 @@ exports.createLootboxes = async (req, res) => {
         await createLootbox('epic', numEpic);
         await createLootbox('rare', numRare);
         await createLootbox('common', numCommon);
+
+        lootboxes.sort(() => Math.random() - 0.5);
 
         res.status(200).json(lootboxes);
     } catch (error) {
@@ -162,12 +165,50 @@ exports.openLootbox = async (req, res) => {
         const player = await Player.findOne({ username });
         if (player) {
             player.rewards.push(reward.name);
+
+            if (reward.rarity === 'common') player.openedCommonBoxes++;
+            else if (reward.rarity === 'rare') player.openedRareBoxes++;
+            else if (reward.rarity === 'epic') player.openedEpicBoxes++;
+            else if (reward.rarity === 'legendary') player.openedLegendaryBoxes++;
+
             await player.save();
+
+            await OpenBoxLog.create({
+                userId: player._id,
+                username,
+                boxId: lootbox._id,
+                rewardName: reward.name,
+                rarity: reward.rarity
+            });
+
+            let leaderboardEntry = await Leaderboard.findOne({ userId: player._id });
+
+            if (!leaderboardEntry) {
+                leaderboardEntry = new Leaderboard({
+                    userId: player._id,
+                    username,
+                    commonBoxesOpened: player.openedCommonBoxes,
+                    rareBoxesOpened: player.openedRareBoxes,
+                    epicBoxesOpened: player.openedEpicBoxes,
+                    legendaryBoxesOpened: player.openedLegendaryBoxes
+                });
+            } else {
+                leaderboardEntry.commonBoxesOpened = player.openedCommonBoxes;
+                leaderboardEntry.rareBoxesOpened = player.openedRareBoxes;
+                leaderboardEntry.epicBoxesOpened = player.openedEpicBoxes;
+                leaderboardEntry.legendaryBoxesOpened = player.openedLegendaryBoxes;
+            }
+
+            await leaderboardEntry.save();
         }
 
-        res.status(200).json({ reward: reward.name, imagePath: reward.imagePath });
+        res.status(200).json({
+            message: 'Loot box opened successfully',
+            reward: reward.name,
+            rarity: reward.rarity
+        });
     } catch (error) {
-        console.error('Error opening loot box:', error);
+        console.error('Error opening lootbox:', error);
         res.status(500).json({ error: 'Server error' });
     }
 };

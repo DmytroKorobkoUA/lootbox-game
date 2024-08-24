@@ -1,9 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import LootboxGrid from '../components/lootboxGrid';
+import Leaderboard from '../components/leaderBoard';
 import axios from 'axios';
 
-const GamePage = ({ socket, player, gameStarted, setGameStarted, handleLogout }) => {
+const GamePage = ({ socket, player, gameStarted, setGameStarted, handleLogout, leaderboard }) => {
     const [loading, setLoading] = useState(false);
+    const [timer, setTimer] = useState(0);
+
+    useEffect(() => {
+        if (gameStarted) {
+            setTimer(30);
+        } else {
+            const countdown = setInterval(() => {
+                setTimer(prevTimer => (prevTimer > 0 ? prevTimer - 1 : 0));
+            }, 1000);
+
+            return () => clearInterval(countdown);
+        }
+    }, [gameStarted]);
 
     const startGame = async () => {
         setLoading(true);
@@ -34,12 +48,16 @@ const GamePage = ({ socket, player, gameStarted, setGameStarted, handleLogout })
         <div className="game-page">
             <h1>Loot Box Game</h1>
             {!gameStarted ? (
-                <button onClick={startGame} disabled={loading}>
-                    {loading ? 'Starting...' : 'Start Game'}
-                </button>
+                <>
+                    <Leaderboard leaderboard={leaderboard}/>
+                    <p>Game starts in: {timer} seconds</p>
+                    <button onClick={startGame} disabled={loading || timer > 0}>
+                        {loading ? 'Starting...' : 'Start Game'}
+                    </button>
+                </>
             ) : (
                 <>
-                    <LootboxGrid socket={socket} username={player.username} />
+                    <LootboxGrid socket={socket} username={player.username}/>
                     <button onClick={endGame}>End Game</button>
                 </>
             )}

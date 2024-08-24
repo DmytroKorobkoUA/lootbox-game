@@ -7,6 +7,7 @@ function App() {
     const [player, setPlayer] = useState(null);
     const [socket, setSocket] = useState(null);
     const [gameStarted, setGameStarted] = useState(false);
+    const [leaderboard, setLeaderboard] = useState([]);
 
     useEffect(() => {
         const storedPlayer = JSON.parse(localStorage.getItem('player'));
@@ -31,6 +32,10 @@ function App() {
 
         newSocket.on('gameEnded', () => {
             setGameStarted(false);
+        });
+
+        newSocket.on('updateLeaderboard', (data) => {
+            setLeaderboard(data);
         });
 
         setSocket(newSocket);
@@ -63,6 +68,7 @@ function App() {
                             gameStarted={gameStarted}
                             setGameStarted={setGameStarted}
                             handleLogout={handleLogout}
+                            leaderboard={leaderboard}
                         />
                     )}
                 </>
