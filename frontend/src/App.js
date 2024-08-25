@@ -94,8 +94,6 @@ function App() {
                 <AuthPage setPlayer={handleLogin} />
             ) : (
                 <>
-                    <h1>Loot Box Game</h1>
-                    <h2>Welcome, {player.username}!</h2>
                     {socket && (
                         <GamePage
                             socket={socket}

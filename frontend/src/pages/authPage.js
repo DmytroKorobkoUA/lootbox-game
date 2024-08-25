@@ -42,9 +42,11 @@ const AuthPage = ({ setPlayer }) => {
                 />
                 <button type="submit">{isRegister ? 'Register' : 'Login'}</button>
             </form>
-            <button onClick={() => setIsRegister(!isRegister)}>
-                {isRegister ? 'Switch to Login' : 'Switch to Register'}
-            </button>
+            <div className="toggle-button-container">
+                <button className="toggle-button" onClick={() => setIsRegister(!isRegister)}>
+                    {isRegister ? 'Switch to Login' : 'Switch to Register'}
+                </button>
+            </div>
         </div>
     );
 };

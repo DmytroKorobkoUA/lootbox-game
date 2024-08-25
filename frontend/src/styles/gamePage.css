@@ -1,4 +1,25 @@
 /* Game Page Styles */
+.game-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.game-title {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.welcome-message {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
 .game-page button {
     padding: 12px;
     font-size: 16px;
@@ -7,11 +28,10 @@
     color: white;
     border: none;
     border-radius: 8px;
-    margin: 5px 0;
+    margin: 10px auto;
     width: 100%;
     max-width: 200px;
     display: block;
-    margin: 10px auto;
     text-align: center;
 }
 
@@ -19,15 +39,68 @@
     background-color: #a87f4c;
 }
 
-/* Game log styles */
-.game-log {
-    margin-top: 20px;
-    padding: 15px;
+/* Layout for content */
+.content-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 20px;
+    width: 100%;
+    max-width: 1200px;
+    height: calc(100vh - 100px);
+    align-items: start;
+}
+
+/* First column styles: Players list and game log */
+.first-column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.players-list {
     background-color: #f5e3c2;
     border-radius: 10px;
-    max-height: 200px;
-    overflow-y: auto;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.players-list h3 {
+    margin: 0;
+    padding-bottom: 10px;
+}
+
+.players-list ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.players-list li {
+    padding: 8px;
+    background-color: #f9f9f9;
+    margin-bottom: 5px;
+    border-radius: 5px;
+}
+
+.game-log {
+    background-color: #f5e3c2;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.game-log h3 {
+    margin: 0;
+    padding-bottom: 10px;
+}
+
+.game-log-content {
+    flex: 1;
+    padding-right: 15px;
 }
 
 .game-log ul {
@@ -43,26 +116,43 @@
     border-radius: 5px;
 }
 
-/* Players list styles */
-.game-page .players-list {
-    margin-top: 20px;
+/* Second column styles: Leaderboard or lootbox grid */
+.second-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.leaderboard {
+    background-color: #f5e3c2;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.lootbox-grid-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.lootbox-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 100px);
+    grid-template-rows: repeat(5, 100px);
+    gap: 10px;
+}
+
+/* Third column styles: Action buttons */
+.game-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
     padding: 15px;
     background-color: #f5e3c2;
     border-radius: 10px;
-    max-height: 200px;
-    overflow-y: auto;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-}
-
-.game-page .players-list ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-}
-
-.game-page .players-list li {
-    padding: 8px;
-    background-color: #f9f9f9;
-    margin-bottom: 5px;
-    border-radius: 5px;
 }

@@ -50,8 +50,13 @@
     background-color: #a87f4c;
 }
 
-.auth-page .toggle-button {
+.auth-page .toggle-button-container {
+    display: flex;
+    justify-content: center;
     margin-top: 10px;
+}
+
+.auth-page .toggle-button {
     padding: 12px;
     font-size: 16px;
     cursor: pointer;

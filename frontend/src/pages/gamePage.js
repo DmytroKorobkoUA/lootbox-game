@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import '../styles/gamePage.css';
 import LootboxGrid from '../components/lootboxGrid';
 import Leaderboard from '../components/leaderBoard';
@@ -8,7 +8,7 @@ const GamePage = ({ socket, player, gameStarted, gameInitiated, setGameStarted, 
     const [loading, setLoading] = useState(false);
     const [playersInGame, setPlayersInGame] = useState([]);
     const [gameLog, setGameLog] = useState([]);
-    const gameLogRef = useRef(null);
+    const gameLogContainerRef = useRef(null);
 
     useEffect(() => {
         if (socket) {
@@ -33,6 +33,7 @@ const GamePage = ({ socket, player, gameStarted, gameInitiated, setGameStarted, 
                 setGameStarted(false);
                 setGameInitiated(false);
                 setPlayersInGame([]);
+                setGameLog([]);
             });
 
             return () => {
@@ -50,8 +51,8 @@ const GamePage = ({ socket, player, gameStarted, gameInitiated, setGameStarted, 
     }, [countdown, playersInGame, gameInitiated]);
 
     useEffect(() => {
-        if (gameLogRef.current) {
-            gameLogRef.current.scrollTop = gameLogRef.current.scrollHeight;
+        if (gameLogContainerRef.current) {
+            gameLogContainerRef.current.scrollTop = gameLogContainerRef.current.scrollHeight;
         }
     }, [gameLog]);
 
@@ -88,45 +89,60 @@ const GamePage = ({ socket, player, gameStarted, gameInitiated, setGameStarted, 
 
     return (
         <div className="game-page">
-            <div className="players-list">
-                <h3>Players in the Game:</h3>
-                <ul>
-                    {playersInGame.map((username, index) => (
-                        <li key={index}>{username}</li>
-                    ))}
-                </ul>
-            </div>
-            {!gameStarted ? (
-                <>
-                    <Leaderboard leaderboard={leaderboard} />
-                    {gameInitiated ? (
-                        <>
-                            <p>Game starts in: {countdown} seconds</p>
-                            {!playersInGame.includes(player.username) && (
-                                <button onClick={joinGame}>Ready</button>
-                            )}
-                        </>
-                    ) : (
-                        <button onClick={startGame} disabled={loading}>
-                            {loading ? 'Starting...' : 'Initiate Game'}
-                        </button>
-                    )}
-                </>
-            ) : (
-                <>
-                    <LootboxGrid socket={socket} username={player.username} initialLootboxes={lootboxes} />
-                    <div className="game-log">
-                        <h3>Game Log:</h3>
+            <h1 className="game-title">Lootbox Game</h1>
+            <h2 className="welcome-message">Welcome, {player.username}!</h2>
+            <div className="content-container">
+                <div className="first-column">
+                    <div className="players-list">
+                        <h3>Players in the Game:</h3>
                         <ul>
-                            {gameLog.map((logEntry, index) => (
-                                <li key={index}>{logEntry}</li>
+                            {playersInGame.map((username, index) => (
+                                <li key={index}>{username}</li>
                             ))}
                         </ul>
                     </div>
-                    <button onClick={endGame}>End Game</button>
-                </>
-            )}
-            <button onClick={handleLogout}>Logout</button>
+                    <div className="game-log">
+                        <h3>Game Log:</h3>
+                        <div className="game-log-content" ref={gameLogContainerRef}>
+                            <ul>
+                                {gameLog.map((logEntry, index) => (
+                                    <li key={index}>{logEntry}</li>
+                                ))}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div className="second-column">
+                    {!gameStarted ? (
+                        <Leaderboard leaderboard={leaderboard}/>
+                    ) : (
+                        <LootboxGrid socket={socket} username={player.username} initialLootboxes={lootboxes}/>
+                    )}
+                </div>
+                <div className="game-actions">
+                    {!gameStarted ? (
+                        <>
+                            {gameInitiated ? (
+                                <>
+                                    <p>Game starts in: {countdown} seconds</p>
+                                    {!playersInGame.includes(player.username) && (
+                                        <button onClick={joinGame}>Ready</button>
+                                    )}
+                                </>
+                            ) : (
+                                <button onClick={startGame} disabled={loading}>
+                                    {loading ? 'Starting...' : 'Initiate Game'}
+                                </button>
+                            )}
+                        </>
+                    ) : (
+                        <>
+                            <button onClick={endGame}>End Game</button>
+                        </>
+                    )}
+                    <button onClick={handleLogout}>Logout</button>
+                </div>
+            </div>
         </div>
     );
 };
