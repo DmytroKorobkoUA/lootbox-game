@@ -1,6 +1,9 @@
 /* Leader Board Styles */
 .leaderboard {
     margin-top: 20px;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.9);
 }
 
 .leaderboard table {
@@ -9,19 +12,40 @@
 }
 
 .leaderboard th, .leaderboard td {
-    border: 1px solid #ddd;
-    padding: 8px;
+    border: 2px solid #d5a35b;
+    padding: 10px;
     text-align: center;
+    border-radius: 8px;
 }
 
 .leaderboard th {
-    background-color: #f2f2f2;
+    background-color: #f5e3c2;
     font-weight: bold;
 }
 
 .status-indicator {
-    width: 12px;
-    height: 12px;
+    width: 14px;
+    height: 14px;
     border-radius: 50%;
     display: inline-block;
+}
+
+.leaderboard .common {
+    color: #1976d2;
+}
+
+.leaderboard .rare {
+    color: #388e3c;
+}
+
+.leaderboard .epic {
+    color: #6a0dad;
+}
+
+.leaderboard .legendary {
+    color: #ffb300;
+}
+
+.leaderboard .total {
+    color: #492102;
 }

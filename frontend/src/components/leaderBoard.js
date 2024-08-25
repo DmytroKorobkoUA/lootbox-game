@@ -44,11 +44,11 @@ const Leaderboard = () => {
                                 />
                         </td>
                         <td>{entry.username}</td>
-                        <td>{entry.totalBoxesOpened}</td>
-                        <td>{entry.commonBoxesOpened}</td>
-                        <td>{entry.rareBoxesOpened}</td>
-                        <td>{entry.epicBoxesOpened}</td>
-                        <td>{entry.legendaryBoxesOpened}</td>
+                        <td className={`total`}>{entry.totalBoxesOpened}</td>
+                        <td className={`common`}>{entry.commonBoxesOpened}</td>
+                        <td className={`rare`}>{entry.rareBoxesOpened}</td>
+                        <td className={`epic`}>{entry.epicBoxesOpened}</td>
+                        <td className={`legendary`}>{entry.legendaryBoxesOpened}</td>
                     </tr>
                 ))}
                 </tbody>

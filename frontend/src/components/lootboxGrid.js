@@ -55,23 +55,25 @@ const LootboxGrid = ({ socket, username }) => {
     }, [socket]);
 
     return (
-        <div className="lootbox-grid">
-            {lootboxes.map((lootbox) => (
-                <div
-                    key={lootbox._id}
-                    className={`lootbox ${lootbox.isOpened ? 'opened' : ''}`}
-                    onClick={() => handleLootboxClick(lootbox._id)}
-                >
-                    {lootbox.isOpened ? (
-                        <>
-                            <img src={lootbox.imagePath} alt={lootbox.reward} />
-                            <span>{lootbox.reward}</span>
-                        </>
-                    ) : (
-                        <img src="/images/chest.png" alt="Closed Chest" />
-                    )}
-                </div>
-            ))}
+        <div className="lootbox-grid-container">
+            <div className="lootbox-grid">
+                {lootboxes.map((lootbox) => (
+                    <div
+                        key={lootbox._id}
+                        className={`lootbox ${lootbox.isOpened ? 'opened' : ''} ${lootbox.rarity}`}
+                        onClick={() => handleLootboxClick(lootbox._id)}
+                    >
+                        {lootbox.isOpened ? (
+                            <>
+                                <img src={lootbox.imagePath} alt={lootbox.reward} />
+                                <span>{lootbox.reward}</span>
+                            </>
+                        ) : (
+                            <img src="/images/chest.png" alt="Closed Chest" />
+                        )}
+                    </div>
+                ))}
+            </div>
         </div>
     );
 };

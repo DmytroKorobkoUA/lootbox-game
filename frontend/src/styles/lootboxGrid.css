@@ -1,4 +1,11 @@
 /* Grid Styles */
+.lootbox-grid-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
 .lootbox-grid {
     display: grid;
     grid-template-columns: repeat(5, 100px);
@@ -16,7 +23,7 @@
     background-color: #f9f9f9;
     cursor: pointer;
     position: relative;
-    transition: border-color 0.3s ease, background-color 0.3s ease;
+    transition: border-color 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
@@ -25,8 +32,28 @@
 }
 
 .lootbox.opened {
-    border-color: #4caf50;
-    background-color: #e8f5e9;
+    border-width: 4px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.lootbox.common.opened {
+    border-color: #1976d2;
+    box-shadow: 0 0 10px rgba(25, 118, 210, 0.5);
+}
+
+.lootbox.rare.opened {
+    border-color: #388e3c;
+    box-shadow: 0 0 10px rgba(56, 142, 60, 0.5);
+}
+
+.lootbox.epic.opened {
+    border-color: #6a0dad;
+    box-shadow: 0 0 10px rgba(106, 13, 173, 0.5);
+}
+
+.lootbox.legendary.opened {
+    border-color: #ffb300;
+    box-shadow: 0 0 10px rgba(255, 179, 0, 0.5);
 }
 
 .lootbox img {
