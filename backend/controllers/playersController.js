@@ -114,3 +114,17 @@ exports.deletePlayer = async (req, res) => {
         res.status(500).json({ error: 'Server error' });
     }
 };
+
+exports.getLeaderboard = async (req, res) => {
+    try {
+        const players = await Player.find({})
+            .sort({ totalBoxesOpened: -1 })
+            .limit(5)
+            .select('username totalBoxesOpened commonBoxesOpened rareBoxesOpened epicBoxesOpened legendaryBoxesOpened');
+
+        res.status(200).json(players);
+    } catch (error) {
+        console.error('Error fetching leaderboard:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+};

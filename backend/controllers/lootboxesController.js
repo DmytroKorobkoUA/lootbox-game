@@ -24,52 +24,54 @@ exports.deleteAllLootboxes = async (req, res) => {
 exports.createLootboxes = async (req, res) => {
     try {
         const rewards = await Reward.find();
-        const lootboxes = [];
+        const createLootbox = async (rarity, num) => {
+            const rewardOptions = rewards.filter(r => r.rarity === rarity);
+
+            if (rewardOptions.length === 0) {
+                console.warn(`No rewards found for rarity ${rarity}`);
+                return;
+            }
+
+            const cumulativeProbabilities = [];
+            let cumulative = 0;
+            rewardOptions.forEach(reward => {
+                cumulative += reward.probability;
+                cumulativeProbabilities.push({ reward, cumulative });
+            });
+
+            for (let i = 0; i < num; i++) {
+                const rand = Math.random();
+                const selectedReward = cumulativeProbabilities.find(cp => rand < cp.cumulative);
+
+                if (selectedReward) {
+                    const newLootbox = new Lootbox({
+                        rewards: [selectedReward.reward._id],
+                        rarity,
+                        reward: selectedReward.reward.name,
+                        imagePath: selectedReward.reward.imagePath
+                    });
+                    await newLootbox.save();
+                }
+            }
+        };
+
         const numLegendary = 1;
         const numEpic = 3;
         const numRare = 6;
         const numCommon = 25 - numLegendary - numEpic - numRare;
-
-        const rewardSets = {
-            legendary: rewards.filter(r => r.rarity === 'legendary'),
-            epic: rewards.filter(r => r.rarity === 'epic'),
-            rare: rewards.filter(r => r.rarity === 'rare'),
-            common: rewards.filter(r => r.rarity === 'common'),
-        };
-
-        const createLootbox = async (rarity, num) => {
-            for (let i = 0; i < num; i++) {
-                const rewardOptions = rewardSets[rarity];
-                if (rewardOptions.length === 0) {
-                    console.warn(`No rewards found for rarity ${rarity}`);
-                    continue;
-                }
-
-                const reward = rewardOptions[Math.floor(Math.random() * rewardOptions.length)];
-                const newLootbox = new Lootbox({
-                    rewards: [reward._id],
-                    rarity,
-                    reward: reward.name,
-                    imagePath: reward.imagePath
-                });
-                await newLootbox.save();
-                lootboxes.push(newLootbox);
-            }
-        };
 
         await createLootbox('legendary', numLegendary);
         await createLootbox('epic', numEpic);
         await createLootbox('rare', numRare);
         await createLootbox('common', numCommon);
 
-        lootboxes.sort(() => Math.random() - 0.5);
-
-        res.status(200).json(lootboxes);
+        res.status(200).json({ message: 'Loot boxes created successfully' });
     } catch (error) {
-        console.error('Error creating lootboxes:', error);
+        console.error('Error creating loot boxes:', error);
         res.status(500).json({ error: 'Server error' });
     }
 };
+
 
 exports.getLootboxById = async (req, res) => {
     const { id } = req.params;
@@ -142,16 +144,7 @@ exports.openLootbox = async (req, res) => {
             return res.status(400).json({ error: 'Loot box is already opened' });
         }
 
-        let reward;
-        const rand = Math.random();
-        let cumulativeProbability = 0;
-
-        lootbox.rewards.forEach(item => {
-            cumulativeProbability += item.probability;
-            if (rand < cumulativeProbability) {
-                reward = item;
-            }
-        });
+        const reward = lootbox.rewards[0];
 
         if (!reward) {
             return res.status(400).json({ error: 'No reward found' });
@@ -163,49 +156,23 @@ exports.openLootbox = async (req, res) => {
         await lootbox.save();
 
         const player = await Player.findOne({ username });
-        if (player) {
-            player.rewards.push(reward.name);
 
-            if (reward.rarity === 'common') player.openedCommonBoxes++;
-            else if (reward.rarity === 'rare') player.openedRareBoxes++;
-            else if (reward.rarity === 'epic') player.openedEpicBoxes++;
-            else if (reward.rarity === 'legendary') player.openedLegendaryBoxes++;
+        if (player) {
+            player.totalBoxesOpened++;
+
+            if (reward.rarity === 'common') player.commonBoxesOpened++;
+            else if (reward.rarity === 'rare') player.rareBoxesOpened++;
+            else if (reward.rarity === 'epic') player.epicBoxesOpened++;
+            else if (reward.rarity === 'legendary') player.legendaryBoxesOpened++;
 
             await player.save();
-
-            await OpenBoxLog.create({
-                userId: player._id,
-                username,
-                boxId: lootbox._id,
-                rewardName: reward.name,
-                rarity: reward.rarity
-            });
-
-            let leaderboardEntry = await Leaderboard.findOne({ userId: player._id });
-
-            if (!leaderboardEntry) {
-                leaderboardEntry = new Leaderboard({
-                    userId: player._id,
-                    username,
-                    commonBoxesOpened: player.openedCommonBoxes,
-                    rareBoxesOpened: player.openedRareBoxes,
-                    epicBoxesOpened: player.openedEpicBoxes,
-                    legendaryBoxesOpened: player.openedLegendaryBoxes
-                });
-            } else {
-                leaderboardEntry.commonBoxesOpened = player.openedCommonBoxes;
-                leaderboardEntry.rareBoxesOpened = player.openedRareBoxes;
-                leaderboardEntry.epicBoxesOpened = player.openedEpicBoxes;
-                leaderboardEntry.legendaryBoxesOpened = player.openedLegendaryBoxes;
-            }
-
-            await leaderboardEntry.save();
         }
 
         res.status(200).json({
             message: 'Loot box opened successfully',
             reward: reward.name,
-            rarity: reward.rarity
+            rarity: reward.rarity,
+            imagePath: reward.imagePath
         });
     } catch (error) {
         console.error('Error opening lootbox:', error);

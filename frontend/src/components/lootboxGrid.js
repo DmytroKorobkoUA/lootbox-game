@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/lootboxGrid.css';
 import { getLootboxes } from '../services/api';
+import axios from 'axios';
 
 const LootboxGrid = ({ socket, username }) => {
     const [lootboxes, setLootboxes] = useState([]);
@@ -15,12 +16,27 @@ const LootboxGrid = ({ socket, username }) => {
             });
     }, []);
 
-    const handleLootboxClick = (id) => {
+    const handleLootboxClick = async (id) => {
         const lootbox = lootboxes.find(box => box._id === id);
 
         if (lootbox.isOpened) return;
-        if (socket) {
-            socket.emit('openLootbox', { username, lootboxId: id });
+
+        try {
+            const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/lootboxes/open/${id}`, { username }, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+
+            if (response.status === 200) {
+                socket.emit('lootboxOpened', {
+                    lootboxId: id,
+                    reward: response.data.reward,
+                    imagePath: response.data.imagePath
+                });
+            }
+        } catch (error) {
+            console.error("Error opening lootbox:", error);
         }
     };
 
