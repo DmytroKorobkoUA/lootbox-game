@@ -9,6 +9,7 @@ function App() {
     const [socket, setSocket] = useState(null);
     const [gameStarted, setGameStarted] = useState(false);
     const [leaderboard, setLeaderboard] = useState([]);
+    const [lootboxes, setLootboxes] = useState([]);
 
     useEffect(() => {
         const storedPlayer = JSON.parse(localStorage.getItem('player'));
@@ -27,8 +28,9 @@ function App() {
             console.log('Disconnected from socket server');
         });
 
-        newSocket.on('gameStarted', () => {
+        newSocket.on('gameStarted', (data) => {
             setGameStarted(true);
+            setLootboxes(data.lootboxes);
         });
 
         newSocket.on('gameEnded', () => {
@@ -76,6 +78,7 @@ function App() {
                             setGameStarted={setGameStarted}
                             handleLogout={handleLogout}
                             leaderboard={leaderboard}
+                            lootboxes={lootboxes}
                         />
                     )}
                 </>

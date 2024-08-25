@@ -25,7 +25,7 @@ const Leaderboard = () => {
             <table>
                 <thead>
                 <tr>
-                    <th>Status</th> {/* Новый столбец для статуса */}
+                    <th>Status</th>
                     <th>Player</th>
                     <th>Total</th>
                     <th>Common</th>

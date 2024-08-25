@@ -3,18 +3,8 @@ import '../styles/lootboxGrid.css';
 import { getLootboxes } from '../services/api';
 import axios from 'axios';
 
-const LootboxGrid = ({ socket, username }) => {
-    const [lootboxes, setLootboxes] = useState([]);
-
-    useEffect(() => {
-        getLootboxes()
-            .then(response => {
-                setLootboxes(response.data);
-            })
-            .catch(error => {
-                console.error("Error fetching lootboxes:", error);
-            });
-    }, []);
+const LootboxGrid = ({ socket, username, initialLootboxes }) => {
+    const [lootboxes, setLootboxes] = useState(() => initialLootboxes);
 
     const handleLootboxClick = async (id) => {
         const lootbox = lootboxes.find(box => box._id === id);

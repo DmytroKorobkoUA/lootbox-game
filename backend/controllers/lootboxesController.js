@@ -5,7 +5,6 @@ const Reward = require('../models/reward');
 exports.getAllLootboxes = async (req, res) => {
     try {
         const lootboxes = await Lootbox.find();
-        lootboxes.sort(() => Math.random() - 0.5);
         res.json(lootboxes);
     } catch (err) {
         res.status(500).json({ message: err.message });
@@ -65,7 +64,9 @@ exports.createLootboxes = async (req, res) => {
         await createLootbox('rare', numRare);
         await createLootbox('common', numCommon);
 
-        res.status(200).json({ message: 'Loot boxes created successfully' });
+        const lootboxes = await Lootbox.find();
+
+        res.status(200).json({ lootboxes, message: 'Loot boxes created successfully' });
     } catch (error) {
         console.error('Error creating loot boxes:', error);
         res.status(500).json({ error: 'Server error' });

@@ -47,6 +47,7 @@ app.use('/api/lootboxes', lootboxRoutes);
 app.use('/api/rewards', rewardRoutes);
 
 let gameStarted = false;
+let lootboxes = [];
 
 io.on('connection', (socket) => {
     console.log('user connected', socket.id);
@@ -71,9 +72,11 @@ io.on('connection', (socket) => {
             return socket.emit('error', { message: 'Not enough players to start the game' });
         }
 
+        lootboxes = await Lootbox.find();
+        lootboxes = lootboxes.sort(() => Math.random() - 0.5);
         gameStarted = true;
 
-        io.emit('gameStarted');
+        io.emit('gameStarted', { lootboxes });
     });
 
     socket.on('endGame', async () => {

@@ -3,7 +3,7 @@ import LootboxGrid from '../components/lootboxGrid';
 import Leaderboard from '../components/leaderBoard';
 import axios from 'axios';
 
-const GamePage = ({ socket, player, gameStarted, setGameStarted, handleLogout, leaderboard }) => {
+const GamePage = ({ socket, player, gameStarted, setGameStarted, handleLogout, leaderboard, lootboxes }) => {
     const [loading, setLoading] = useState(false);
     const [timer, setTimer] = useState(0);
 
@@ -57,7 +57,7 @@ const GamePage = ({ socket, player, gameStarted, setGameStarted, handleLogout, l
                 </>
             ) : (
                 <>
-                    <LootboxGrid socket={socket} username={player.username}/>
+                    <LootboxGrid socket={socket} username={player.username} initialLootboxes={lootboxes}/>
                     <button onClick={endGame}>End Game</button>
                 </>
             )}
