@@ -5,7 +5,7 @@ import { registerPlayer, loginPlayer } from '../services/api';
 const AuthPage = ({ setPlayer }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [isRegister, setIsRegister] = useState(true);
+    const [isRegister, setIsRegister] = useState(false);
     const [error, setError] = useState('');
 
     const handleSubmit = async (e) => {

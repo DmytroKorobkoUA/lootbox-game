@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import '../styles/leaderBoard.css';
-import axios from "axios";
+import axios from 'axios';
 
 const Leaderboard = () => {
     const [leaderboard, setLeaderboard] = useState([]);
@@ -15,12 +15,17 @@ const Leaderboard = () => {
             .catch(error => console.error('Failed to fetch leaderboard:', error));
     }, []);
 
+    const getStatusColor = (isOnline) => {
+        return isOnline ? 'green' : 'red';
+    };
+
     return (
         <div className="leaderboard">
             <h2>Leaderboard</h2>
             <table>
                 <thead>
                 <tr>
+                    <th>Status</th> {/* Новый столбец для статуса */}
                     <th>Player</th>
                     <th>Total</th>
                     <th>Common</th>
@@ -32,6 +37,12 @@ const Leaderboard = () => {
                 <tbody>
                 {leaderboard.map((entry, index) => (
                     <tr key={index}>
+                        <td>
+                                <span
+                                    className="status-indicator"
+                                    style={{ backgroundColor: getStatusColor(entry.isOnline) }}
+                                />
+                        </td>
                         <td>{entry.username}</td>
                         <td>{entry.totalBoxesOpened}</td>
                         <td>{entry.commonBoxesOpened}</td>

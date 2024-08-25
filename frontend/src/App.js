@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import AuthPage from './pages/authPage';
 import GamePage from './pages/gamePage';
 import io from 'socket.io-client';
+import axios from "axios";
 
 function App() {
     const [player, setPlayer] = useState(null);
@@ -47,11 +48,17 @@ function App() {
         initializeSocket(playerData);
     };
 
-    const handleLogout = () => {
-        setPlayer(null);
-        setGameStarted(false);
-        if (socket) socket.disconnect();
-        localStorage.removeItem('player');
+    const handleLogout = async () => {
+        try {
+            await axios.post(`${process.env.REACT_APP_API_BASE_URL}/players/logout`, { username: player.username });
+
+            if (socket) socket.disconnect();
+            setPlayer(null);
+            setGameStarted(false);
+            localStorage.removeItem('player');
+        } catch (error) {
+            console.error('Error logging out:', error);
+        }
     };
 
     return (

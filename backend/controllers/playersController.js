@@ -17,6 +17,7 @@ exports.register = async (req, res) => {
 
         player = new Player({ username, password });
         await player.save();
+        await exports.updateOnlineStatus(username, true);
         res.status(201).json({ message: 'Player registered successfully' });
     } catch (error) {
         console.error('Error registering player:', error);
@@ -41,6 +42,8 @@ exports.login = async (req, res) => {
         if (!isMatch) {
             return res.status(401).json({ error: 'Invalid credentials' });
         }
+
+        await exports.updateOnlineStatus(username, true);
 
         const token = jwt.sign({ id: player._id, username: player.username }, process.env.JWT_SECRET, {
             expiresIn: '1h'
@@ -120,11 +123,32 @@ exports.getLeaderboard = async (req, res) => {
         const players = await Player.find({})
             .sort({ totalBoxesOpened: -1 })
             .limit(5)
-            .select('username totalBoxesOpened commonBoxesOpened rareBoxesOpened epicBoxesOpened legendaryBoxesOpened');
+            .select('username totalBoxesOpened commonBoxesOpened rareBoxesOpened epicBoxesOpened legendaryBoxesOpened isOnline');
 
         res.status(200).json(players);
     } catch (error) {
         console.error('Error fetching leaderboard:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+};
+
+exports.updateOnlineStatus = async (username, isOnline) => {
+    try {
+        await Player.findOneAndUpdate({ username }, { isOnline });
+    } catch (error) {
+        console.error('Error updating online status:', error);
+    }
+};
+
+exports.logout = async (req, res) => {
+    const { username } = req.body;
+
+    try {
+        await exports.updateOnlineStatus(username, false);
+
+        res.status(200).json({ message: 'Logged out successfully' });
+    } catch (error) {
+        console.error('Error logging out:', error);
         res.status(500).json({ error: 'Server error' });
     }
 };
