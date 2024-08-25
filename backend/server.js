@@ -83,28 +83,8 @@ io.on('connection', (socket) => {
         io.emit('gameEnded');
     });
 
-    socket.on('openLootbox', async (data) => {
-        const { username, lootboxId } = data;
-
-        if (!gameStarted) {
-            return socket.emit('error', { message: 'Game has not started' });
-        }
-
-        try {
-            const lootbox = await Lootbox.findById(lootboxId);
-
-            if (!lootbox || lootbox.isOpened) {
-                return socket.emit('error', { message: 'Loot box is already opened or does not exist' });
-            }
-
-            lootbox.isOpened = true;
-            lootbox.openedBy = username;
-            await lootbox.save();
-
-            io.emit('lootboxOpened', { lootboxId, reward: lootbox.reward, imagePath: lootbox.imagePath });
-        } catch (error) {
-            console.error('Error opening loot box:', error);
-        }
+    socket.on('lootboxOpened', ({ lootboxId, reward, imagePath }) => {
+        io.emit('lootboxOpened', { lootboxId, reward, imagePath });
     });
 });
 
