@@ -8,8 +8,10 @@ function App() {
     const [player, setPlayer] = useState(null);
     const [socket, setSocket] = useState(null);
     const [gameStarted, setGameStarted] = useState(false);
+    const [gameInitiated, setGameInitiated] = useState(false);
     const [leaderboard, setLeaderboard] = useState([]);
     const [lootboxes, setLootboxes] = useState([]);
+    const [countdown, setCountdown] = useState(0);
 
     useEffect(() => {
         const storedPlayer = JSON.parse(localStorage.getItem('player'));
@@ -35,6 +37,12 @@ function App() {
 
         newSocket.on('gameEnded', () => {
             setGameStarted(false);
+            setGameInitiated(false);
+        });
+
+        newSocket.on('gameInitiated', (data) => {
+            setGameInitiated(true);
+            setCountdown(data.countdown);
         });
 
         newSocket.on('updateLeaderboard', (data) => {
@@ -57,6 +65,7 @@ function App() {
             if (socket) socket.disconnect();
             setPlayer(null);
             setGameStarted(false);
+            setGameInitiated(false);
             localStorage.removeItem('player');
         } catch (error) {
             console.error('Error logging out:', error);
@@ -75,10 +84,12 @@ function App() {
                             socket={socket}
                             player={player}
                             gameStarted={gameStarted}
+                            gameInitiated={gameInitiated}
                             setGameStarted={setGameStarted}
                             handleLogout={handleLogout}
                             leaderboard={leaderboard}
                             lootboxes={lootboxes}
+                            countdown={countdown}
                         />
                     )}
                 </>
