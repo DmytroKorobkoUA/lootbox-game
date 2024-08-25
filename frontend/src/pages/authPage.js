@@ -24,7 +24,7 @@ const AuthPage = ({ setPlayer }) => {
     return (
         <div className="auth-page">
             <h1>{isRegister ? 'Register' : 'Login'}</h1>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
+            {error && <p style={{color: 'red'}}>{error}</p>}
             <form onSubmit={handleSubmit}>
                 <input
                     type="text"

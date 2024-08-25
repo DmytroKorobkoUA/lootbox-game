@@ -18,7 +18,7 @@ exports.register = async (req, res) => {
         player = new Player({ username, password });
         await player.save();
         await exports.updateOnlineStatus(username, true);
-        res.status(201).json({ message: 'Player registered successfully' });
+        res.status(201).json({ message: 'Player registered successfully', username: player.username });
     } catch (error) {
         console.error('Error registering player:', error);
         res.status(500).json({ error: 'Server error' });

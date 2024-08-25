@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/lootboxGrid.css';
-import { getLootboxes } from '../services/api';
 import axios from 'axios';
 
 const LootboxGrid = ({ socket, username, initialLootboxes }) => {
@@ -22,7 +21,9 @@ const LootboxGrid = ({ socket, username, initialLootboxes }) => {
                 socket.emit('lootboxOpened', {
                     lootboxId: id,
                     reward: response.data.reward,
-                    imagePath: response.data.imagePath
+                    imagePath: response.data.imagePath,
+                    username: response.data.player,
+                    rarity: response.data.rarity
                 });
             }
         } catch (error) {

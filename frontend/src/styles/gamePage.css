@@ -1,0 +1,68 @@
+/* Game Page Styles */
+.game-page button {
+    padding: 12px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #8b5e3c;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    margin: 5px 0;
+    width: 100%;
+    max-width: 200px;
+    display: block;
+    margin: 10px auto;
+    text-align: center;
+}
+
+.game-page button:hover {
+    background-color: #a87f4c;
+}
+
+/* Game log styles */
+.game-log {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f5e3c2;
+    border-radius: 10px;
+    max-height: 200px;
+    overflow-y: auto;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.game-log ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.game-log li {
+    padding: 8px;
+    background-color: #f9f9f9;
+    margin-bottom: 5px;
+    border-radius: 5px;
+}
+
+/* Players list styles */
+.game-page .players-list {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f5e3c2;
+    border-radius: 10px;
+    max-height: 200px;
+    overflow-y: auto;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.game-page .players-list ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.game-page .players-list li {
+    padding: 8px;
+    background-color: #f9f9f9;
+    margin-bottom: 5px;
+    border-radius: 5px;
+}

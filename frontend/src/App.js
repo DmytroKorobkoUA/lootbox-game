@@ -12,6 +12,7 @@ function App() {
     const [leaderboard, setLeaderboard] = useState([]);
     const [lootboxes, setLootboxes] = useState([]);
     const [countdown, setCountdown] = useState(0);
+    const [playersInGame, setPlayersInGame] = useState([]);
 
     useEffect(() => {
         const storedPlayer = JSON.parse(localStorage.getItem('player'));
@@ -38,11 +39,25 @@ function App() {
         newSocket.on('gameEnded', () => {
             setGameStarted(false);
             setGameInitiated(false);
+            setPlayersInGame([]);
         });
 
         newSocket.on('gameInitiated', (data) => {
             setGameInitiated(true);
             setCountdown(data.countdown);
+            setPlayersInGame(data.playersInGame);
+        });
+
+        newSocket.on('playerJoined', (data) => {
+            setPlayersInGame(data.playersInGame);
+        });
+
+        newSocket.on('playerLeft', (data) => {
+            setPlayersInGame(data.playersInGame);
+        });
+
+        newSocket.on('maxPlayersReached', (data) => {
+            console.log(data.message);
         });
 
         newSocket.on('updateLeaderboard', (data) => {
@@ -66,6 +81,7 @@ function App() {
             setPlayer(null);
             setGameStarted(false);
             setGameInitiated(false);
+            setPlayersInGame([]);
             localStorage.removeItem('player');
         } catch (error) {
             console.error('Error logging out:', error);
@@ -78,18 +94,21 @@ function App() {
                 <AuthPage setPlayer={handleLogin} />
             ) : (
                 <>
-                    <h1>Welcome, {player.username}!</h1>
+                    <h1>Loot Box Game</h1>
+                    <h2>Welcome, {player.username}!</h2>
                     {socket && (
                         <GamePage
                             socket={socket}
                             player={player}
                             gameStarted={gameStarted}
                             gameInitiated={gameInitiated}
+                            setGameInitiated={setGameInitiated}
                             setGameStarted={setGameStarted}
                             handleLogout={handleLogout}
                             leaderboard={leaderboard}
                             lootboxes={lootboxes}
                             countdown={countdown}
+                            playersInGame={playersInGame}
                         />
                     )}
                 </>

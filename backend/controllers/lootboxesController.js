@@ -173,7 +173,8 @@ exports.openLootbox = async (req, res) => {
             message: 'Loot box opened successfully',
             reward: reward.name,
             rarity: reward.rarity,
-            imagePath: reward.imagePath
+            imagePath: reward.imagePath,
+            player: username
         });
     } catch (error) {
         console.error('Error opening lootbox:', error);
