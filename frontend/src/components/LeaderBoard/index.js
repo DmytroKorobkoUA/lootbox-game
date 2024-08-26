@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import '../styles/leaderBoard.css';
+import '../../styles/leaderBoard.css';
 import axios from 'axios';
 
 const Leaderboard = () => {

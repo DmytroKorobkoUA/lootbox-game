@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import '../styles/lootboxGrid.css';
+import '../../styles/lootboxGrid.css';
 import axios from 'axios';
 
 const LootboxGrid = ({ socket, username, initialLootboxes }) => {

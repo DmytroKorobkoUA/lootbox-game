@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import AuthPage from './pages/authPage';
-import GamePage from './pages/gamePage';
+import AuthPage from '../pages/autPage';
+import GamePage from '../pages/gamePage';
 import io from 'socket.io-client';
 import axios from "axios";
 

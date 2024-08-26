@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import '../styles/authPage.css';
-import { registerPlayer, loginPlayer } from '../services/api';
+import '../../styles/authPage.css';
+import { registerPlayer, loginPlayer } from '../../services/api';
 
 const AuthPage = ({ setPlayer }) => {
     const [username, setUsername] = useState('');
