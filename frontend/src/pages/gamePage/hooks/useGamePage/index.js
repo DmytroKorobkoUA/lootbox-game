@@ -89,6 +89,8 @@ export const useGamePage = ({ socket, setGameStarted, setGameInitiated, gameInit
 		startGame,
 		joinGame,
 		endGame,
+		gameLog,
+		gameLogContainerRef,
 		playersInGame
 	}
 }
