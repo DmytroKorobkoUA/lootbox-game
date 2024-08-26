@@ -1,7 +1,13 @@
+const { validationResult } = require('express-validator');
 const Player = require('../models/player');
 const jwt = require('jsonwebtoken');
 
 exports.register = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
     const { username, password } = req.body;
 
     if (!username || !password) {
@@ -26,6 +32,11 @@ exports.register = async (req, res) => {
 };
 
 exports.login = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
     const { username, password } = req.body;
 
     if (!username || !password) {
@@ -67,6 +78,11 @@ exports.getAllPlayers = async (req, res) => {
 };
 
 exports.getPlayerByUsername = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
     const { username } = req.params;
 
     try {
@@ -82,6 +98,11 @@ exports.getPlayerByUsername = async (req, res) => {
 };
 
 exports.updatePlayer = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
     const { username } = req.params;
     const { rewards, isOnline } = req.body;
 

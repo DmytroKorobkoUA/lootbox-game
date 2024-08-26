@@ -4,7 +4,7 @@ let gameInitiated = false;
 let gameStarted = false;
 let lootboxes = [];
 let countdownTimer;
-let countdownValue = 5;
+let countdownValue = 10;
 let playersInGame = [];
 let openedLootboxes = [];
 let gameLog = [];
@@ -31,7 +31,7 @@ module.exports = (io) => {
         socket.on('initGame', async ({ username }) => {
             if (!gameInitiated) {
                 gameInitiated = true;
-                countdownValue = 5;
+                countdownValue = 10;
                 playersInGame = [username];
                 io.emit('playersInGameUpdate', playersInGame);
                 io.emit('gameInitiated', { countdown: countdownValue });

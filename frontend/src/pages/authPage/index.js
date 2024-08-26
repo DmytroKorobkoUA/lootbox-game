@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import '../../styles/authPage.css';
 import { registerPlayer, loginPlayer } from '../../services/api';
+import { validateCredentials } from '../../services/validation';
 
 const AuthPage = ({ setPlayer }) => {
     const [username, setUsername] = useState('');
@@ -10,6 +11,13 @@ const AuthPage = ({ setPlayer }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        const validationError = validateCredentials(username, password);
+        if (validationError) {
+            setError(validationError);
+            return;
+        }
+
         try {
             const response = isRegister
                 ? await registerPlayer(username, password)
@@ -17,7 +25,7 @@ const AuthPage = ({ setPlayer }) => {
 
             setPlayer({ token: response.data.token, username: response.data.username });
         } catch (err) {
-            setError('Error: ' + err.response?.data?.message || 'Unexpected error');
+            setError('Error: ' + (err.response?.data?.message || 'Unexpected error'));
         }
     };
 
