@@ -69,6 +69,7 @@ npm start
 ```
 
 ## Features
+- Register and log in users using JWT tokens.
 - Real-time multiplayer gameplay using WebSockets.
 - Dynamic loot box opening with different reward rarities.
 - Real-time leaderboard displaying player stats and rankings.
@@ -110,3 +111,10 @@ The project uses MongoDB for data storage. Ensure MongoDB is running and properl
 ```bash
 npm run seed
 ```
+
+## Security Considerations
+
+- **JWT Authentication**: The API uses JSON Web Tokens (JWT) for authentication. Include the token in the Authorization header for endpoints that require authentication.
+- **Password Hashing**: User passwords are hashed using bcrypt before being stored in the database.
+- **Environment Variable**: Store sensitive information in environment variables to keep them secure.
+- 
