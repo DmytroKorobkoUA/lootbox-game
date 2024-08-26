@@ -151,10 +151,25 @@ exports.openLootbox = async (req, res) => {
             return res.status(400).json({ error: 'No reward found' });
         }
 
+        const currentVersion = lootbox.__v; // текущая версия документа
         lootbox.isOpened = true;
         lootbox.openedBy = username;
 
-        await lootbox.save();
+        const updatedLootbox = await Lootbox.findOneAndUpdate(
+            { _id: id, __v: currentVersion },
+            {
+                $set: {
+                    isOpened: true,
+                    openedBy: username
+                },
+                $inc: { __v: 1 }
+            },
+            { new: true }
+        );
+
+        if (!updatedLootbox) {
+            return res.status(409).json({ error: 'Conflict detected. Please try again.' });
+        }
 
         const player = await Player.findOne({ username });
 

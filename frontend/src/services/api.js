@@ -39,12 +39,4 @@ export const loginPlayer = async (username, password) => {
     return response;
 };
 
-export const createLootboxes = async () => {
-    return api.post('/lootboxes/create');
-};
-
-export const getLootboxes = async () => {
-    return api.get('/lootboxes');
-};
-
 export default api;

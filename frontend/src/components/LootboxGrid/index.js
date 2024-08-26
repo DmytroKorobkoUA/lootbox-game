@@ -27,9 +27,14 @@ const LootboxGrid = ({ socket, username, initialLootboxes }) => {
                 });
             }
         } catch (error) {
-            console.error("Error opening lootbox:", error);
+            if (error.response && error.response.status === 400 && error.response.data.error === 'Loot box is already opened') {
+                alert('Loot box is already opened by another player');
+            } else {
+                console.error("Error opening lootbox:", error);
+            }
         }
     };
+
 
     useEffect(() => {
         socket.on('lootboxOpened', ({ lootboxId, reward, imagePath }) => {
