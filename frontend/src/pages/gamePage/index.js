@@ -41,32 +41,29 @@ const GamePage = ({ socket, player, gameStarted, gameInitiated, setGameStarted, 
 					</div>
 				</div>
 				<div className="second-column">
-					{!gameStarted ? (
-						<Leaderboard leaderboard={leaderboard}/>
-					) : (
-						<LootboxGrid socket={socket} username={player.username} initialLootboxes={lootboxes}/>
-					)}
+					{!gameStarted && <Leaderboard leaderboard={leaderboard} />}
+					{gameStarted && <LootboxGrid socket={socket} username={player.username} initialLootboxes={lootboxes} />}
 				</div>
 				<div className="game-actions">
-					{!gameStarted ? (
+					{!gameStarted && (
 						<>
-							{gameInitiated ? (
+							{gameInitiated && (
 								<>
 									<p>Game starts in: {countdown} seconds</p>
 									{!playersInGame.includes(player.username) && (
 										<button onClick={joinGame}>Ready</button>
 									)}
 								</>
-							) : (
+							)}
+							{!gameInitiated && (
 								<button onClick={startGame} disabled={loading}>
 									{loading ? 'Starting...' : 'Initiate Game'}
 								</button>
 							)}
 						</>
-					) : (
-						<>
-							<button onClick={endGame}>End Game</button>
-						</>
+					)}
+					{gameStarted && (
+						<button onClick={endGame}>End Game</button>
 					)}
 					<button onClick={handleLogout}>Logout</button>
 				</div>

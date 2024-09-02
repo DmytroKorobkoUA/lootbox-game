@@ -24,7 +24,7 @@
     padding: 12px;
     font-size: 16px;
     cursor: pointer;
-    background-color: #8b5e3c;
+    background-color: rgba(139, 94, 60, 0.9);
     color: white;
     border: none;
     border-radius: 8px;
@@ -33,10 +33,12 @@
     max-width: 200px;
     display: block;
     text-align: center;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .game-page button:hover {
-    background-color: #a87f4c;
+    background-color: rgba(168, 127, 76, 0.9);
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* Layout for content */
@@ -58,12 +60,13 @@
 }
 
 .players-list {
-    background-color: #f5e3c2;
+    background-color: rgba(245, 227, 194, 0.7);
     border-radius: 10px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     padding: 15px;
     max-height: 300px;
     overflow-y: auto;
+    transition: background-color 0.3s ease;
 }
 
 .players-list h3 {
@@ -79,18 +82,19 @@
 
 .players-list li {
     padding: 8px;
-    background-color: #f9f9f9;
+    background-color: rgba(249, 249, 249, 0.7);
     margin-bottom: 5px;
     border-radius: 5px;
 }
 
 .game-log {
-    background-color: #f5e3c2;
+    background-color: rgba(245, 227, 194, 0.7);
     border-radius: 10px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     padding: 15px;
     max-height: 300px;
     overflow-y: auto;
+    transition: background-color 0.3s ease;
 }
 
 .game-log h3 {
@@ -111,7 +115,7 @@
 
 .game-log li {
     padding: 8px;
-    background-color: #f9f9f9;
+    background-color: rgba(249, 249, 249, 0.7);
     margin-bottom: 5px;
     border-radius: 5px;
 }
@@ -125,7 +129,7 @@
 }
 
 .leaderboard {
-    background-color: #f5e3c2;
+    background-color: rgba(245, 227, 194, 0.9);
     border-radius: 10px;
     padding: 15px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
@@ -152,7 +156,7 @@
     flex-direction: column;
     gap: 10px;
     padding: 15px;
-    background-color: #f5e3c2;
+    background-color: rgba(245, 227, 194, 0.7);
     border-radius: 10px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 }
