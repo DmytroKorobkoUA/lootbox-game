@@ -151,7 +151,7 @@ exports.openLootbox = async (req, res) => {
             return res.status(400).json({ error: 'No reward found' });
         }
 
-        const currentVersion = lootbox.__v; // текущая версия документа
+        const currentVersion = lootbox.__v;
         lootbox.isOpened = true;
         lootbox.openedBy = username;
 
